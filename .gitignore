@@ -1,0 +1,14 @@
+# 忽略所有文件
+*
+
+# 但保留以下目录
+!Assets/
+!Assets/Boot/
+!Assets/Boot/Script/
+!Assets/Boot/Script/**
+!Assets/Game/
+!Assets/Game/Script/
+!Assets/Game/Script/**
+
+# 保留 .gitignore 自身
+!.gitignore
