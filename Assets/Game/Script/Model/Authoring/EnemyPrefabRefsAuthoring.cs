@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Game.Script.ECS.Components;
 using Game.Script.ECS.Components.Enemy;
 using Unity.Entities;
 using Unity.Entities.Serialization;
@@ -36,7 +35,13 @@ namespace Game.Script.Model.Authoring
 
                     AddComponent(markerEntity, new EnemyTypeName { Value = entry.typeName });
                     
-                    var prefabRef = new EntityPrefabReference(entry.prefab);
+#if UNITY_EDITOR
+                    var assetPath = UnityEditor.AssetDatabase.GetAssetPath(entry.prefab);
+                    var guid = UnityEditor.AssetDatabase.GUIDFromAssetPath(assetPath);
+                    var prefabRef = new EntityPrefabReference(guid);
+#else
+                    var prefabRef = new EntityPrefabReference(new Unity.Entities.Hash128());
+#endif
                     AddComponent(markerEntity, new EnemyPrefabRef { Value = prefabRef });
                 }
             }

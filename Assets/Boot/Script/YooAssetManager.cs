@@ -74,12 +74,11 @@ namespace Boot.Script
                 case EPlayMode.WebPlayMode://微信小游戏模式
                 {
                     IRemoteService remoteService=new RemoteServices(defaultHost, fallbackHost);
-                    var webServerFileSystemParams = FileSystemParameters.CreateDefaultWebServerFileSystemParameters();
                     var webNetworkFileSystemParams =
                         FileSystemParameters.CreateDefaultWebNetworkFileSystemParameters(remoteService);
                     var createParameters = new WebPlayModeOptions()
                     {
-                        WebServerFileSystemParameters = webServerFileSystemParams,
+                        WebServerFileSystemParameters = null,
                         WebNetworkFileSystemParameters = webNetworkFileSystemParams
                     };
                     var initOperation =  Package.InitializePackageAsync(createParameters);
