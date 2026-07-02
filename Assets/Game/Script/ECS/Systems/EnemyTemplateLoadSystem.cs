@@ -1,13 +1,12 @@
 using Game.Script.ECS.Components;
 using Game.Script.ECS.Components.Enemy;
-using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Scenes;
 
 namespace Game.Script.ECS.Systems
 {
-    [BurstCompile]
+    [DisableAutoCreation]
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     [UpdateAfter(typeof(EnemyPrefabLoadSystem))]
     public partial struct EnemyTemplateLoadSystem : ISystem
@@ -32,7 +31,6 @@ namespace Game.Script.ECS.Systems
             );
         }
 
-        [BurstCompile]
         public void OnDestroy(ref SystemState state)
         {
             if (SystemAPI.TryGetSingleton<EnemyTemplateRegistry>(out var registry))
@@ -41,7 +39,6 @@ namespace Game.Script.ECS.Systems
             }
         }
 
-        [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
             if (loadedQuery.IsEmpty)

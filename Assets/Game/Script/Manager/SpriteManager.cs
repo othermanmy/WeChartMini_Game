@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using Boot.Script;
 using Cysharp.Threading.Tasks;
+using Game.Script.Tool;
 using QFramework;
 using UnityEngine;
 using UnityEngine.U2D;
@@ -39,7 +39,7 @@ namespace Game.Script.Manager
             if (string.IsNullOrEmpty(atlasPath)) return;
             if (atlasCache.ContainsKey(atlasPath)) return;
 
-            var wrapper = await YooAssetManager.Instance.LoadAssetAsync<SpriteAtlas>(
+            var wrapper = await GameAssetManager.Instance.LoadAssetAsync<SpriteAtlas>(
                ResPrefix.Image+atlasPath);
             if (!wrapper?.Asset) return;
 

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Boot.Script;
 using Cysharp.Threading.Tasks;
 using Game.Script.Model;
+using Game.Script.Tool;
 using QFramework;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -258,7 +258,7 @@ namespace Game.Script.Manager
                             if (!propPools.TryGetValue(propRule.propPrefabPath, out var pool))
                             {
                                 //获取预制体
-                                var gm = await YooAssetManager.Instance.LoadAssetAsync<GameObject>(ResPrefix.Props +
+                                var gm = await GameAssetManager.Instance.LoadAssetAsync<GameObject>(ResPrefix.Props +
                                     propRule.propPrefabPath);
                                 pool = new ObjectPool<GameObject>(() =>
                                 {

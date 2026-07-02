@@ -1,5 +1,4 @@
-﻿using Unity.Burst;
-using Unity.Collections;
+﻿using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Game.Script.ECS.Components;
@@ -8,7 +7,6 @@ using Game.Script.Manager;
 using Unity.Burst.Intrinsics;
 using Unity.Jobs;
 using Unity.Physics;
-using Unity.Physics.Systems;
 using Unity.Transforms;
 
 namespace Game.Script.ECS.Systems
@@ -97,7 +95,6 @@ namespace Game.Script.ECS.Systems
             );
         }
 
-        [BurstCompile]
         public struct EnemyMoveJob : IJobChunk
         {
             [ReadOnly] public float HashCellSize;
@@ -108,7 +105,6 @@ namespace Game.Script.ECS.Systems
             public ComponentTypeHandle<PhysicsVelocity> PhysicsVelocityHandle;
             [ReadOnly] public EntityTypeHandle EntityTypeHandle;
 
-            [BurstCompile]
             public void Execute(in ArchetypeChunk chunk, int unfilteredChunkIndex, bool useEnabledMask, in v128 chunkEnabledMask)
             {
                 var moveDataArray = chunk.GetNativeArray(ref MoveDataTypeHandle);

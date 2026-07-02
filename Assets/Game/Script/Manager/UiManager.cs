@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Boot.Script;
 using Cysharp.Threading.Tasks;
+using Game.Script.Tool;
 using Game.Script.Ui;
 using QFramework;
 
@@ -41,7 +41,7 @@ namespace Game.Script.Manager
         {
             try
             {
-                var obj = await YooAssetManager.Instance.InstantiateAsync(ResPrefix.UiPanel + panelName);
+                var obj = await GameAssetManager.Instance.InstantiateAsync(ResPrefix.UiPanel + panelName);
                 if (!obj)
                 {
                     source.TrySetResult(null);

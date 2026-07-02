@@ -1,5 +1,4 @@
 using Game.Script.ECS.Components.Anim;
-using Unity.Burst;
 using Unity.Burst.Intrinsics;
 using Unity.Collections;
 using Unity.Entities;
@@ -12,7 +11,6 @@ namespace Game.Script.ECS.Systems.Anim
     /// Transform 缓动动画系统（纯 ECS，IJobChunk 并行）
     /// 插值 LocalTransform 的位置/缩放 + SpriteRenderData 颜色
     /// </summary>
-    [BurstCompile]
     [UpdateInGroup(typeof(PresentationSystemGroup))]
     [UpdateBefore(typeof(SpriteAnimationSystem))]
     public partial struct TransformTweenSystem : ISystem
@@ -65,7 +63,6 @@ namespace Game.Script.ECS.Systems.Anim
             ecb.Dispose();
         }
 
-        [BurstCompile]
         private struct TweenJob : IJobChunk
         {
             public float DeltaTime;

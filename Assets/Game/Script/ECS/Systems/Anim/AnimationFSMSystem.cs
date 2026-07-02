@@ -1,5 +1,4 @@
 using Game.Script.ECS.Components.Anim;
-using Unity.Burst;
 using Unity.Burst.Intrinsics;
 using Unity.Collections;
 using Unity.Entities;
@@ -93,7 +92,6 @@ namespace Game.Script.ECS.Systems.Anim
         public void OnDestroy(ref SystemState state) { }
     }
 
-    [BurstCompile]
     internal struct AnimationStateChangeJob : IJobChunk
     {
         [ReadOnly] public ComponentTypeHandle<AnimState> StateHandle;
@@ -125,7 +123,6 @@ namespace Game.Script.ECS.Systems.Anim
         }
     }
 
-    [BurstCompile]
     internal struct AnimationEventJob : IJobChunk
     {
         [ReadOnly] public ComponentTypeHandle<AnimationEvent> EventHandle;

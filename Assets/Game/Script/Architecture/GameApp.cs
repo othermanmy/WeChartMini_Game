@@ -1,7 +1,7 @@
-﻿using Boot.Script;
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using Game.Script.Manager;
 using Game.Script.Model;
+using Game.Script.Tool;
 using QFramework;
 
 namespace Game.Script.Architecture
@@ -15,7 +15,7 @@ namespace Game.Script.Architecture
         
         private async UniTask LoadPlayerData()
         {
-            var playerData=await YooAssetManager.Instance.LoadAssetAsync<PlayerInitData>
+            var playerData=await GameAssetManager.Instance.LoadAssetAsync<PlayerInitData>
                 (ResPrefix.Data+"PlayerInitData");
             var m=new PlayerModel();
             m.InitData(playerData.Asset);

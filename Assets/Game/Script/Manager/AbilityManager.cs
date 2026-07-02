@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Boot.Script;
 using Cysharp.Threading.Tasks;
 using Game.Script.Model;
 using Game.Script.Model.Ability;
+using Game.Script.Tool;
 using Newtonsoft.Json;
 using QFramework;
 using UnityEngine;
@@ -27,7 +27,7 @@ namespace Game.Script.Manager
         private async UniTask InitAsync()
         {
             //加载配置文件
-            var configAs =await YooAssetManager.Instance.LoadAssetAsync<TextAsset>(ResPrefix.Data + "AbilityConfigs");
+            var configAs =await GameAssetManager.Instance.LoadAssetAsync<TextAsset>(ResPrefix.Data + "AbilityConfigs");
             configs=JsonConvert.DeserializeObject<Dictionary<int,AbilityConfig>>(configAs.Asset.text);
             configList=new List<AbilityConfig>(configs.Values);
         }

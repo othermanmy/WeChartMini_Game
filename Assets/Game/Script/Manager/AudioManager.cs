@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Boot.Script;
 using Cysharp.Threading.Tasks;
+using Game.Script.Tool;
 using QFramework;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -49,7 +49,7 @@ namespace Game.Script.Manager
             if (clipCache.TryGetValue(clipName, out var cached)) return cached;
 
             var fullPath = ResPrefix.Audio + clipName;
-            var wrapper = await YooAssetManager.Instance.LoadAssetAsync<AudioClip>(fullPath);
+            var wrapper = await GameAssetManager.Instance.LoadAssetAsync<AudioClip>(fullPath);
             if (!wrapper?.Asset) return null;
 
             clipCache[clipName] = wrapper.Asset;

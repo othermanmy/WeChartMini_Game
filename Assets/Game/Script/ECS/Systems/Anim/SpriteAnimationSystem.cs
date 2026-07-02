@@ -3,14 +3,12 @@ using Game.Script.ECS.Components.Anim;
 using Game.Script.ECS.Components.Enemy;
 using Game.Script.Model;
 using Game.Script.Tool;
-using Unity.Burst;
 using Unity.Burst.Intrinsics;
 using Unity.Collections;
 using Unity.Entities;
 
 namespace Game.Script.ECS.Systems.Anim
 {
-    [BurstCompile]
     [UpdateInGroup(typeof(PresentationSystemGroup))]
     public partial struct SpriteAnimationSystem : ISystem
     {
@@ -70,7 +68,6 @@ namespace Game.Script.ECS.Systems.Anim
             ecb.Dispose();
         }
 
-        [BurstCompile]
         private struct SpriteAnimationJob : IJobChunk
         {
             public float DeltaTime;

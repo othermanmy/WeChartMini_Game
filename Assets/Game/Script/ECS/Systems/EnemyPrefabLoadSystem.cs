@@ -1,6 +1,5 @@
 using Game.Script.ECS.Components;
 using Game.Script.ECS.Components.Enemy;
-using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Scenes;
@@ -8,7 +7,7 @@ using Unity.Scenes;
 namespace Game.Script.ECS.Systems
 {
  
-    [BurstCompile]
+    [DisableAutoCreation]
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     public partial struct EnemyPrefabLoadSystem : ISystem
     {
@@ -24,7 +23,6 @@ namespace Game.Script.ECS.Systems
             );
         }
 
-        [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
             if (initQuery.IsEmpty)

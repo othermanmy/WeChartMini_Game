@@ -1,5 +1,4 @@
-﻿using Unity.Burst;
-using Unity.Entities;
+﻿using Unity.Entities;
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
@@ -12,7 +11,6 @@ namespace Game.Script.ECS.Systems
     /// <summary>
     /// 每帧重建空间哈希，将敌人坐标映射到空间网格
     /// </summary>
-    [BurstCompile]
     [UpdateInGroup(typeof(SimulationSystemGroup), OrderFirst = true)]
     public partial struct SpatialHashBuildSystem : ISystem
     {
@@ -42,7 +40,6 @@ namespace Game.Script.ECS.Systems
             });
         }
 
-        [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
             var enemyEntities = enemyQuery.ToEntityArray(Allocator.TempJob);
@@ -97,7 +94,6 @@ namespace Game.Script.ECS.Systems
             enemyRadii.Dispose();
         }
 
-        [BurstCompile]
         public void OnDestroy(ref SystemState state)
         {
             if (hashGrid.IsCreated)
@@ -107,7 +103,6 @@ namespace Game.Script.ECS.Systems
             if (sp.IsValid) sp.ValueRW.IsCreated = false;
         }
 
-        [BurstCompile]
         public struct BuildSpatialHashJob : IJobParallelFor
         {
             [ReadOnly] public NativeArray<Entity> EnemyEntities;
@@ -116,7 +111,6 @@ namespace Game.Script.ECS.Systems
             [ReadOnly] public float CellSize;
             public NativeParallelMultiHashMap<int, EnemyHashEntry>.ParallelWriter HashGridWriter;
 
-            [BurstCompile]
             public void Execute(int index)
             {
                 var pos = EnemyPositions[index];
@@ -140,7 +134,6 @@ namespace Game.Script.ECS.Systems
                 }
             }
 
-            [BurstCompile]
             private static int HashCell(int gx, int gy)
             {
                 return (int)math.hash(new int2(gx, gy));

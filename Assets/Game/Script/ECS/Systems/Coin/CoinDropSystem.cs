@@ -2,7 +2,6 @@ using Game.Script.ECS.Components;
 using Game.Script.ECS.Components.Coin;
 using Game.Script.ECS.Components.Enemy;
 using Game.Script.ECS.Components.Pool;
-using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
@@ -48,7 +47,6 @@ namespace Game.Script.ECS.Systems.Coin
         }
 
        
-        [BurstCompile]
         private struct CoinDropSetupJob : IJobParallelFor
         {
             [ReadOnly] public NativeArray<Entity> CoinEntities;

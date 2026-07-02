@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Cysharp.Threading.Tasks;
@@ -18,28 +19,104 @@ namespace Boot.Script
         private EPlayMode mode=EPlayMode.EditorSimulateMode;
 
         private HotUpdatePanel hotUpdatePanel;
-
-        public List<string> metaDataPath = new()
+        private List<string> metaDataPath = new()
         {
-            "mscorlib",
-            "System",
-            "System.Core",
-            "Assembly-CSharp",
-            "UniTask",
-            "Newtonsoft.Json",
-            "LitJson",
-            "DOTween",
-            "DOTween.Modules",
-            "QFramework",
-            "QFramework.CoreKit",
-            "Boot.Runtime",
-            "Cinemachine"
+          "Assembly-CSharp",
+"Cinemachine",
+"DOTween",
+"DOTween.Modules",
+"HybridCLR.Runtime",
+"LitJson",
+"Mono.Security",
+"mscorlib",
+"Newtonsoft.Json",
+"QFramework.CoreKit",
+"QFramework",
+"System.Configuration",
+"System.Core",
+"System.Data",
+"System",
+"System.Drawing",
+"System.Numerics",
+"System.Runtime",
+"System.Runtime.Serialization",
+"System.Xml",
+"System.Xml.Linq",
+"UniTask",
+"Unity.2D.Animation.Runtime",
+"Unity.2D.Tilemap.Extras",
+"Unity.Burst",
+"Unity.Burst.Unsafe",
+"Unity.Collections",
+"Unity.Collections.LowLevel.ILSupport",
+"Unity.Deformations",
+"Unity.Entities",
+"Unity.Entities.Graphics",
+"Unity.Entities.Hybrid",
+"Unity.Entities.Hybrid.HybridComponents",
+"Unity.FontABTool",
+"Unity.InputSystem",
+"Unity.InternalAPIEngineBridge.001",
+"Unity.Mathematics",
+"Unity.Mathematics.Extensions",
+"Unity.Physics",
+"Unity.Physics.Hybrid",
+"Unity.RenderPipeline.Universal.ShaderLibrary",
+"Unity.RenderPipelines.Core.Runtime",
+"Unity.RenderPipelines.Universal.Runtime",
+"Unity.Scenes",
+"Unity.Serialization",
+"Unity.TextMeshPro",
+"Unity.Timeline",
+"Unity.Transforms",
+"Unity.Transforms.Hybrid",
+"UnityEngine.AIModule",
+"UnityEngine.AndroidJNIModule",
+"UnityEngine.AnimationModule",
+"UnityEngine.AssetBundleModule",
+"UnityEngine.AudioModule",
+"UnityEngine.ContentLoadModule",
+"UnityEngine.CoreModule",
+"UnityEngine.DirectorModule",
+"UnityEngine",
+"UnityEngine.GridModule",
+"UnityEngine.IMGUIModule",
+"UnityEngine.InputLegacyModule",
+"UnityEngine.InputModule",
+"UnityEngine.JSONSerializeModule",
+"UnityEngine.ParticleSystemModule",
+"UnityEngine.Physics2DModule",
+"UnityEngine.PhysicsModule",
+"UnityEngine.PropertiesModule",
+"UnityEngine.SharedInternalsModule",
+"UnityEngine.SpriteMaskModule",
+"UnityEngine.SpriteShapeModule",
+"UnityEngine.SubsystemsModule",
+"UnityEngine.TerrainModule",
+"UnityEngine.TextCoreFontEngineModule",
+"UnityEngine.TextCoreTextEngineModule",
+"UnityEngine.TextRenderingModule",
+"UnityEngine.TilemapModule",
+"UnityEngine.UI",
+"UnityEngine.UIElementsModule",
+"UnityEngine.UIModule",
+"UnityEngine.UnityAnalyticsModule",
+"UnityEngine.UnityWebRequestAssetBundleModule",
+"UnityEngine.UnityWebRequestModule",
+"UnityEngine.VFXModule",
+"UnityEngine.VideoModule",
+"UnityEngine.VRModule",
+"UnityEngine.WebGLModule",
+"UnityEngine.XRModule",
+"wx-runtime",
+"Wx",
+"YooAsset",
         };
         
-        
-        public List<string> hotUpdateAssembliesPath = new()
-        {
-           "HotAssembly.dll",
+        private List<string> hotUpdateAssembliesPath = new()
+        { 
+            "netstandard.dll",
+           "HotAssembly.dll"
         };
         private void Awake()
         {
@@ -55,14 +132,14 @@ namespace Boot.Script
         {
             //初始化
             hotUpdatePanel.SetTextInfo("正在初始化资源系统...");
-           bool initSucceed= await YooAssetManager.Instance.InitAsync(mode, defaultHostServer, fallbackHostServer);
+           bool initSucceed= await BootAssetManager.Instance.InitAsync(mode, defaultHostServer, fallbackHostServer);
            if (!initSucceed)
            {
                hotUpdatePanel.SetTextInfo("资源系统初始化失败!");
                return;
            }
            //下载资源
-           bool downloadSucceed = await YooAssetManager.Instance.UpdateAndDownLoadResAsync(
+           bool downloadSucceed = await BootAssetManager.Instance.UpdateAndDownLoadResAsync(
                hotUpdatePanel.SetTextInfo,
                hotUpdatePanel.SetProcess);
            if (!downloadSucceed) return;
@@ -76,15 +153,14 @@ namespace Boot.Script
 
         private async UniTask LoadDlls()
         {
-#if UNITY_EDITOR
-            return;         
-#endif
+            Assembly hot = null;
+#if !UNITY_EDITOR
             //补充元数据
             foreach (var path in metaDataPath)
             {
                 var location = ResPrefix.Assembly + path+".dll";
                 print($"加载元数据:{location}");
-                var handle = await YooAssetManager.
+                var handle = await BootAssetManager.
                     Instance.LoadAssetAsync<TextAsset>(location);
                 if (handle == null || !handle.Asset)
                 {
@@ -92,33 +168,37 @@ namespace Boot.Script
                     continue;
                 }
                 byte[] bytes = handle.Asset.bytes;
-                var ret = RuntimeApi.LoadMetadataForAOTAssembly(bytes, HomologousImageMode.SuperSet);
+                var ret = RuntimeApi.LoadMetadataForAOTAssembly(bytes, HomologousImageMode.Consistent);
                 Debug.Log($"补充元数据 {location} 结果码:{ret}");
             }
-            
-            
-            
             //加载热更程序集
             foreach (var path in hotUpdateAssembliesPath)
             {
                 var location = ResPrefix.Assembly + path;
                 print(path);
-                var bytes = await YooAssetManager.Instance.LoadAssetAsync<TextAsset>(location);
+                var bytes = await BootAssetManager.Instance.LoadAssetAsync<TextAsset>(location);
                 if (bytes != null)
                 {
-                    Assembly.Load(bytes.Asset.bytes);
+                   hot= Assembly.Load(bytes.Asset.bytes);
                     Debug.Log($"[HybridCLR] 成功加载热更DLL: {path}");
                 }
                 else
                     Debug.LogError($"[HybridCLR] 找不到热更DLL资源: {path}");
             }
+#endif
+                ECSHotFixHelper.InitializeDOTSWorld(hot);
+            
         }
 
         private async UniTask ChangeToMainScene()
         {
-            var sceneHandle = YooAssetManager.Instance.LoadSceneAsync("GameScene"
+            var sceneHandle = BootAssetManager.Instance.LoadSceneAsync("GameScene"
                 , LoadSceneMode.Single, LocalPhysicsMode.None, true);
             await sceneHandle;
+            print("加载完成");
         }
+        
+        
+        
     }
 }

@@ -1,9 +1,9 @@
 
 using System.Collections.Generic;
-using Boot.Script;
 using Cysharp.Threading.Tasks;
 using Game.Script.Manager;
 using Game.Script.Model;
+using Game.Script.Tool;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -21,7 +21,7 @@ namespace Game.Script.Ui
 		protected override async UniTask Init()
 		{
 			await SpriteManager.Instance.LoadAtlasAsync(atlasName);
-			aUiWrapper = await YooAssetManager.Instance.
+			aUiWrapper = await GameAssetManager.Instance.
 				LoadAssetAsync<GameObject>(ResPrefix.UiPanel + nameof(AbilityUi));
 		
 			abilityUiPool=new ObjectPool<AbilityUi>(

@@ -2,7 +2,6 @@ using Game.Script.ECS.Components;
 using Game.Script.ECS.Components.Coin;
 using Game.Script.ECS.Components.Pool;
 using Game.Script.Manager;
-using Unity.Burst;
 using Unity.Burst.Intrinsics;
 using Unity.Collections;
 using Unity.Entities;
@@ -40,7 +39,6 @@ namespace Game.Script.ECS.Systems.Coin
             state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
         }
 
-        [BurstCompile]
         struct CoinPickupJob : IJobChunk
         {
             [ReadOnly] public EntityTypeHandle EntityType;

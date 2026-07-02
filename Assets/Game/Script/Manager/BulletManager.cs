@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Boot.Script;
 using Cysharp.Threading.Tasks;
 using Game.Script.Architecture;
 using Game.Script.Model.Bullets;
@@ -8,6 +7,7 @@ using QFramework;
 using Game.Script.ECS.Components;
 using Game.Script.Model;
 using Game.Script.Model.Bullets.Trait;
+using Game.Script.Tool;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -46,7 +46,7 @@ namespace Game.Script.Manager
             var i = GameApp.Interface;
             playerModel = i.GetModel<PlayerModel>();
           
-            bulletPrefab=await YooAssetManager.Instance.LoadAssetAsync<GameObject>(ResPrefix.Bullets + "NormalBullet");
+            bulletPrefab=await GameAssetManager.Instance.LoadAssetAsync<GameObject>(ResPrefix.Bullets + "NormalBullet");
             bulletPool = new(CreateFunc, OnGet, OnRelease, 
                 null, true,10,max_Bullet_Count);
 

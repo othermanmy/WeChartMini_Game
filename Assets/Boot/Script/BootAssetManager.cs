@@ -22,9 +22,7 @@ namespace Boot.Script
         public const string Audio= "Audio_";
     }
     
-    
-    
-    public class YooAssetManager:MonoSingleton<YooAssetManager>
+    public class BootAssetManager:MonoSingleton<BootAssetManager>
     {
         private class RemoteServices : IRemoteService
         {
